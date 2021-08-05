@@ -5,7 +5,7 @@ function liveTime() {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
-    clock.innerText = `${hours}:${minutes}:${seconds}`;
+    clock.innerText = `현재시각 ${hours}:${minutes}:${seconds}`;
 }
 
 liveTime();

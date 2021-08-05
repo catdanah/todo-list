@@ -3,9 +3,6 @@ const loginInput = document.querySelector("#login-form input");
 const greeting = document.querySelector("#greeting");
 
 const savedUsername = localStorage.getItem("username");
-// logout button
-const logoutBtn = document.createElement("button");
-const logoutBtnTxt = document.createTextNode("logout");
 
 function login() {
     localStorage.setItem("username", loginInput.value);
@@ -13,10 +10,13 @@ function login() {
 }
 
 function greetUser(username) {
+    const renameBtn = document.createElement("button");
+    const renameBtnTxt = document.createTextNode("rename");
     loginForm.classList.add("hidden");
-    greeting.innerText = `환영합니다! ${username}님!`;
-    logoutBtn.appendChild(logoutBtnTxt);
-    greeting.appendChild(logoutBtn);
+    greeting.innerText = `Hello ${username} `;
+    renameBtn.appendChild(renameBtnTxt);
+    greeting.appendChild(renameBtn);
+    renameBtn.addEventListener("click", logout);
 }
 
 // username 편집 기능 추가
@@ -39,4 +39,3 @@ function loginProcess() {
 }
 
 loginProcess();
-logoutBtn.addEventListener("click", logout);
