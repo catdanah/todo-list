@@ -7,29 +7,56 @@ const doneList = document.querySelector("#done-list");
 let todosArr = [];
 let doneArr = [];
 
-function doneTodo(event) { // done-todo 기능 추가
-    const li = event.target.parentElement;
-    doneList.append(li);
-    const button = li.querySelector("button"); // 여러개의 같은 태그 중 첫번째요소만 반환
-    button.remove(); // 첫번째 button만 삭제
-    donelist = todosArr.filter((todo) => todo.id === parseInt(li.id));
-    doneArr.push(donelist); // 배열에 push해야 저장됨
-    localStorage.setItem("done-todo", JSON.stringify(doneArr));
-    todosArr = todosArr.filter((todo) => todo.id !== parseInt(li.id));
-    localStorage.setItem("to-do", JSON.stringify(todosArr));
-}
-
-
 function deleteAll() { // todo-list 모두 삭제 기능 추가
     localStorage.removeItem("to-do");
     location.reload();
+}
+
+function deleteDone(event) { // done-list 삭제 기능
+    const li = event.target.parentElement;
+    li.remove();
+    doneArr = doneArr.filter((todo) => todo.id !== parseInt(li.id));
+    saveDone();
 }
 
 function deleteTodo(event) {
     const li = event.target.parentElement;
     li.remove();
     todosArr = todosArr.filter((todo) => todo.id !== parseInt(li.id));
+    saveTodo();
+}
+
+function saveDone() {
+    localStorage.setItem("done-todo", JSON.stringify(doneArr));
+}
+
+function saveTodo() {
     localStorage.setItem("to-do", JSON.stringify(todosArr));
+}
+
+function paintDone(done) {
+    const li = document.createElement("li");
+    li.id = done.id;
+    const span = document.createElement("span");
+    span.innerText = done.text;
+    const dltBtn = document.createElement("button");
+    dltBtn.innerText = `❌`;
+    doneList.appendChild(li);
+    li.appendChild(span);
+    li.appendChild(dltBtn);
+    dltBtn.addEventListener("click", deleteDone);
+}
+
+function doneTodo(event) { // done-todo 기능 추가
+    const li = event.target.parentElement;
+    doneList.append(li);
+    const button = li.querySelector("button"); // 여러개의 같은 태그 중 첫번째요소만 반환
+    button.remove(); // 첫번째 button만 삭제
+    let filteredDone = todosArr.filter((todo) => todo.id === parseInt(li.id));
+    doneArr = doneArr.concat(filteredDone); // concat메서드로 배열 병합
+    saveDone();
+    todosArr = todosArr.filter((todo) => todo.id !== parseInt(li.id));
+    saveTodo();
 }
 
 function paintTodo(newTodo) {
@@ -37,15 +64,15 @@ function paintTodo(newTodo) {
     li.id = newTodo.id;
     const span = document.createElement("span");
     span.innerText = newTodo.text;
-    const chckBtn = document.createElement("button");
+    const doneBtn = document.createElement("button");
     const dltBtn = document.createElement("button");
-    chckBtn.innerText = `✔️`;
+    doneBtn.innerText = `✔️`;
     dltBtn.innerText = `❌`;
     todoList.appendChild(li);
     li.appendChild(span);
-    li.appendChild(chckBtn);
+    li.appendChild(doneBtn);
     li.appendChild(dltBtn);
-    chckBtn.addEventListener("click", doneTodo);
+    doneBtn.addEventListener("click", doneTodo);
     dltBtn.addEventListener("click", deleteTodo);
 }
 
@@ -59,14 +86,14 @@ function submitTodo(event) {
     }
     todosArr.push(newTodoObj); // 배열에 input value값 저장하고
     paintTodo(newTodoObj);
-    localStorage.setItem("to-do", JSON.stringify(todosArr)); // 문자열로 전환한 배열을 로컬스토리지에 저장
+    saveTodo(); // 문자열로 전환한 배열을 로컬스토리지에 저장
 }
 
 todoForm.addEventListener("submit", submitTodo);
 dltAllBtn.addEventListener("click", deleteAll);
 
 const todos = localStorage.getItem("to-do");
-const doneTodos = localStorage.getItem("done-todo");
+const done = localStorage.getItem("done-todo");
 
 if(todos !== null) {
     const parsedTodos = JSON.parse(todos);
@@ -74,9 +101,8 @@ if(todos !== null) {
     parsedTodos.forEach(paintTodo);
 }
 
-if(doneTodos !== null) {
-    const parsedDone = JSON.parse(doneTodos);
+if(done !== null) {
+    const parsedDone = JSON.parse(done);
     doneArr = parsedDone;
-    localStorage.setItem("done-todo", JSON.stringify(doneArr));
-    
+    parsedDone.forEach(paintDone);
 }

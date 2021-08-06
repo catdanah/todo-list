@@ -1,16 +1,18 @@
 @charset "utf-8";
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .todo {
-    width:30vw; padding:5vh;
-    border:1px solid #333;
+  width: 30vw;
+  padding: 5vh;
+  border: 1px solid #333;
 }
 
 .done {
-    width:30vw; padding:5vh;
-    margin-top:5vh;
-    border:1px solid #333;
+  width: 30vw;
+  padding: 5vh;
+  margin-top: 5vh;
+  border: 1px solid #333;
 }
